@@ -34,7 +34,7 @@ RUN set -ex && \
     rm /requirements.txt get-pip.py
 
 # Install Acestream from URL.
-#RUN mkdir -p /opt/acestream && \
+# RUN mkdir -p /opt/acestream && \
 #    wget --no-verbose --output-document acestream.tgz "${ACESTREAM_VERSION}" && \
 #    echo "${ACESTREAM_SHA256} acestream.tgz" | sha256sum --check && \
 #    tar --extract --gzip --directory /opt/acestream --file acestream.tgz && \
@@ -49,10 +49,14 @@ RUN tar --extract --gzip --directory /opt/acestream --file /opt/acestream/acestr
 COPY web/player.html /opt/acestream/data/webui/html/player.html
 
 # Copy Acestream configuration.
-COPY config/acestream.conf /opt/acestream/acestream.conf
+# COPY config/acestream.conf /opt/acestream/acestream.conf
 
 # Entry point for the container.
 COPY config/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
+
+# Expose necessary ports.
+EXPOSE 6878
+EXPOSE 8621
