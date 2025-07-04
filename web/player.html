@@ -8,7 +8,6 @@
         href="https://lh3.googleusercontent.com/drive-viewer/AKGpihZoBOT8YvVO8u53lht7oeVVmko0q4EqDT5mVGHpurxXNl9vIrM96zStqLVdIaXWm8n6PSrkRwIAzHnUJKhrkDdwMSNMHX0IYkU=w1314-h1045" />
     <link href="https://vjs.zencdn.net/8.16.1/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/8.16.1/video.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" />
     <style>
         body,
         html,
@@ -59,15 +58,12 @@
         }
 
         #toggle-view:hover {
-            background: rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 1);
         }
 
-        #toggle-icon {
+        #toggle-view svg {
             color: #333;
-            font-size: 18px;
         }
-
-
 
         .lang-button {
             background-color: transparent;
@@ -79,6 +75,12 @@
         .lang-button:hover {
             transform: scale(1.2);
             transition-duration: 0.2s;
+        }
+
+        .lang-button svg {
+            height: 15px;
+            width: auto;
+            display: block;
         }
 
         #play-button {
@@ -95,35 +97,23 @@
         #play-button:hover {
             background-color: #0056b3;
         }
-
-        #loading {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 200;
-            transition: opacity 0.3s ease;
-        }
-
-        #loading i {
-            font-size: 24px;
-            color: #007bff;
-        }
-
-        #loading p {
-            margin-top: 10px;
-        }
     </style>
 </head>
 
 <body>
     <div id="toggle-view">
-        <i class="fas fa-eye-slash" id="toggle-icon"></i>
+        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+            viewBox="0 0 16 16" style="display: none;">
+            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+        </svg>
+        <svg id="eye-slash-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+            viewBox="0 0 16 16">
+            <path
+                d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588M5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+            <path
+                d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z" />
+        </svg>
     </div>
     <video id="video" class="video-js vjs-default-skin" controls preload="none" data-setup="{}" width="100%"
         height="100%">
@@ -132,20 +122,26 @@
         </p>
     </video>
     <div id="acestream-link">
-        <button class="lang-button" onclick="changeLanguage('es')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Bandera_de_Espa%C3%B1a_%28sin_escudo%29.svg"
-                alt="Spanish" title="Spanish" style="height: 15px" />
+        <button class="lang-button" onclick="changeLanguage('es')" title="Español">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 500" aria-hidden="true">
+                <rect width="750" height="500" fill="#c60b1e" />
+                <rect width="750" height="250" y="125" fill="#ffc400" />
+            </svg>
         </button>
-        <button class="lang-button" onclick="changeLanguage('en')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/English_language.svg" alt="English"
-                title="English" style="height: 15px" />
+        <button class="lang-button" onclick="changeLanguage('en')" title="English">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" aria-hidden="true">
+                <clipPath id="t-uk">
+                    <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" />
+                </clipPath>
+                <path d="M0,0 v30 h60 v-30 z" fill="#00247d" />
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6" />
+                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t-uk)" stroke="#cf142b" stroke-width="4" />
+                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10" />
+                <path d="M30,0 v30 M0,15 h60" stroke="#cf142b" stroke-width="6" />
+            </svg>
         </button>
         <input type="text" id="acestream-link-input" placeholder="Insert Acestream link here" />
         <button id="play-button">Play</button>
-    </div>
-    <div id="loading">
-        <i class="fas fa-spinner fa-spin"></i>
-        <p id="loading-p">Loading...</p>
     </div>
 
 
@@ -162,12 +158,10 @@
 
         // Load AceStream stream
         function loadAceStream(link) {
-            const loadingIndicator = getElement('loading');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             const playerId = link.replace(ACESTREAM_PREFIX, '');
 
             if (playerId.length > 1) {
-                loadingIndicator.style.display = 'block';
                 getElement('acestream-link-input').value = link;
                 document.title = `Ace Link [${playerId.substr(0, 7)}]`;
 
@@ -176,10 +170,7 @@
                     type: 'application/x-mpegURL',
                 });
 
-                player.play().then(() => {
-                    loadingIndicator.style.display = 'none';
-                }).catch((error) => {
-                    loadingIndicator.style.display = 'none';
+                player.play().catch((error) => {
                     console.error('Error al reproducir el video:', error);
                 });
             } else {
@@ -191,9 +182,20 @@
         // Show/hide Acestream input
         function toggleAcestreamInput() {
             const inputDiv = getElement('acestream-link');
-            const icon = getElement('toggle-icon');
-            inputDiv.style.display = inputDiv.style.display === 'none' ? 'flex' : 'none';
-            icon.className = inputDiv.style.display === 'none' ? 'fas fa-eye' : 'fas fa-eye-slash';
+            const eyeIcon = getElement('eye-icon');
+            const eyeSlashIcon = getElement('eye-slash-icon');
+
+            const isVisible = inputDiv.style.display !== 'none';
+
+            if (isVisible) {
+                inputDiv.style.display = 'none';
+                eyeIcon.style.display = 'block';
+                eyeSlashIcon.style.display = 'none';
+            } else {
+                inputDiv.style.display = 'flex';
+                eyeIcon.style.display = 'none';
+                eyeSlashIcon.style.display = 'block';
+            }
         }
 
         // Change page language
@@ -201,7 +203,6 @@
             const acestreamLinkInput = getElement('acestream-link-input');
             acestreamLinkInput.placeholder = lang === 'es' ? 'Insertar aquí el enlace Acestream' : 'Insert Acestream link here';
             getElement('play-button').innerText = lang === 'es' ? 'Reproducir' : 'Play';
-            getElement('loading-p').innerText = lang === 'es' ? 'Cargando...' : 'Loading...';
         }
 
         getElement('toggle-view').addEventListener('click', toggleAcestreamInput);
