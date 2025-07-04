@@ -1,9 +1,7 @@
-version: '3.8'
 services:
   acestream:
     image: smarquezp/docker-acestream-ubuntu-home:latest
     container_name: acestream
-    restart: unless-stopped
     ports:
       - 6878:6878
     environment:

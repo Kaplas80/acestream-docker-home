@@ -14,9 +14,18 @@ configuración y proporciona entornos aislados.
    - [Página de productos de Docker](https://www.docker.com/products/docker-desktop)
    - [Documentación Oficial](https://docs.docker.com/get-docker/)
 
-## Instalación Automática y Ejecución con `SetupAcestream.bat` (Windows)
+## Instalación Automática y Ejecución con Scripts de Configuración (Windows)
 
-1. **Descripción del Script**: El script `SetupAcestream.bat` automatiza las siguientes tareas:
+### Selección de Idioma
+Elige el script de configuración según tu idioma preferido:
+
+- **🇺🇸 English**: Usa `SetupAcestream.bat`
+- **🇪🇸 Español**: Usa `SetupAcestream_es.bat`
+
+Ambos scripts tienen **funcionalidad idéntica** y solo difieren en el idioma de la interfaz.
+
+### Descripción del Script
+Los scripts de configuración automatizan las siguientes tareas:
 
    - Verificación de la instalación y estado operativo de Docker.
    - Descarga de la imagen Docker más reciente de Acestream.
@@ -24,7 +33,10 @@ configuración y proporciona entornos aislados.
    - Actualización del archivo `docker-compose.yml` de forma dinámica según los puertos disponibles.
    - Inicio del contenedor Acestream y apertura de la interfaz web.
 
-2. **Uso**: Descarga y ejecuta el script `SetupAcestream.bat` como Administrador.
+### Uso
+1. **Elige tu idioma**: Descarga `SetupAcestream.bat` (inglés) o `SetupAcestream_es.bat` (español)
+2. **Ejecutar como Administrador**: Haz clic derecho en el script elegido y selecciona "Ejecutar como administrador"
+3. **Seguir las instrucciones**: El script te guiará a través del proceso de configuración
 
 > **Nota:** El script garantiza que se utilice la imagen Docker más reciente de Acestream y que la gestión del
 > contenedor se maneje de manera eficiente.

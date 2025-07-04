@@ -91,12 +91,10 @@ docker rm !SERVICE_NAME! -f >NUL 2>&1
 echo.
 echo Creating or updating the docker-compose.yml file...
 >%DOCKER_COMPOSE_FILE% (
-    echo version: '3.8'
     echo services:
     echo   !SERVICE_NAME!:
     echo     image: !IMAGE_NAME!
     echo     container_name: !SERVICE_NAME!
-    echo     restart: unless-stopped
     echo     ports:
     echo       - !PORT!:!PORT!
     echo     environment:
@@ -144,7 +142,7 @@ echo [Farewell]
 echo -------------------------------------------------------------
 echo Thank you for using the Acestream x Docker setup assistant.
 echo We hope you enjoy an excellent streaming experience!
-echo @marquezpsergio
+echo @smarquezdev
 echo -------------------------------------------------------------
 echo Finalizing the script and restoring the environment...
 pause

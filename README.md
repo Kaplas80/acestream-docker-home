@@ -12,9 +12,18 @@ Acestream is a platform for live streaming via peer-to-peer networks. Dockerizin
    - [Docker Products Page](https://www.docker.com/products/docker-desktop)
    - [Official Documentation](https://docs.docker.com/get-docker/)
 
-## Automatic Installation and Execution with `SetupAcestream.bat` (Windows)
+## Automatic Installation and Execution with Setup Scripts (Windows)
 
-1. **Script Overview**: The `SetupAcestream.bat` script automates the following tasks:
+### Language Selection
+Choose the setup script based on your preferred language:
+
+- **🇺🇸 English**: Use `SetupAcestream.bat`
+- **🇪🇸 Español**: Use `SetupAcestream_es.bat`
+
+Both scripts have **identical functionality** and only differ in the interface language.
+
+### Script Overview
+The setup scripts automate the following tasks:
 
    - Checking for Docker installation and operational status.
    - Downloading the latest Acestream Docker image.
@@ -22,7 +31,10 @@ Acestream is a platform for live streaming via peer-to-peer networks. Dockerizin
    - Updating the `docker-compose.yml` file dynamically based on the available ports.
    - Starting the Acestream container and opening the web interface.
 
-2. **Usage**: Download and run the `SetupAcestream.bat` script as Administrator.
+### Usage
+1. **Choose your language**: Download either `SetupAcestream.bat` (English) or `SetupAcestream_es.bat` (Spanish)
+2. **Run as Administrator**: Right-click the chosen script and select "Run as Administrator"
+3. **Follow prompts**: The script will guide you through the setup process
 
 > **Note:** The script ensures the latest Acestream Docker image is used and that the container management is handled
 > efficiently.
