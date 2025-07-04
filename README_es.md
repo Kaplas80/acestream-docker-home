@@ -112,6 +112,35 @@ múltiples instancias. Esto se maneja en el script `SetupAcestream.bat`.
 El archivo `player.html` se actualiza dinámicamente con la dirección IP y el puerto correctos durante el proceso de
 inicio del contenedor. Esto asegura que la interfaz web apunte a la instancia correcta del motor de Acestream.
 
+## Variables de Entorno
+
+| Variable | Descripción | Valor por defecto |
+|----------|-------------|-------------------|
+| INTERNAL_IP | Dirección IP que usan el reproductor y el motor como endpoint anunciado. | 127.0.0.1 |
+| HTTP_PORT | Puerto expuesto para tráfico HTTP dentro del contenedor. | 6878 |
+| HTTPS_PORT | Puerto expuesto para tráfico HTTPS dentro del contenedor. | 6879 |
+
+## Características Principales
+
+- Scripts de instalación en Windows de un solo clic con descarga automática de la imagen Docker y asignación dinámica de puertos.
+- `acestream.conf` preconfigurado con límites de concurrencia y caché adecuados para producción.
+- Script de arranque reforzado (`entrypoint.sh`) que valida variables de entorno y muestra diagnósticos detallados.
+- Parche automático de `player.html` para que la interfaz web siempre apunte a la IP y puerto correctos.
+- Soporte multi-instancia: puedes lanzar varios contenedores simultáneamente sin conflictos de puertos.
+- Construcciones offline gracias al archivo `resources/acestream.tar.gz` incluido (no se requieren descargas externas).
+
+## Solución de Problemas y Consejos
+
+- Asegúrate de que los puertos seleccionados por el script de Windows estén **abiertos en tu firewall**.
+- Para uso en Linux/macOS establece `INTERNAL_IP`, `HTTP_PORT` y `HTTPS_PORT` al ejecutar `docker run` o `docker-compose`.
+- Visualiza los registros en tiempo real con `docker logs -f <nombre_contenedor>` para diagnosticar problemas del motor.
+- El motor escribe información de depuración adicional cuando la opción `--log-debug` está habilitada en `acestream.conf`.
+
+## Aviso Legal
+
+Este repositorio solo distribuye scripts de automatización. El binario de Acestream se proporciona para **uso personal, educativo o de investigación**.
+Eres el único responsable de garantizar que tu uso cumpla con todas las leyes y regulaciones aplicables.
+
 ## Contribuciones
 
 Agradecemos las contribuciones. Haz un fork, realiza cambios y envía un pull request para revisión.

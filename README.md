@@ -109,6 +109,35 @@ instances. This is handled in the `SetupAcestream.bat` script.
 The `player.html` file is dynamically updated with the correct IP address and port during the container startup process.
 This ensures that the web interface points to the correct Acestream engine instance.
 
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| INTERNAL_IP | IP address used by the player and engine to bind as the advertised endpoint. | 127.0.0.1 |
+| HTTP_PORT | Port exposed for HTTP traffic inside the container. | 6878 |
+| HTTPS_PORT | Port exposed for HTTPS traffic inside the container. | 6879 |
+
+## Key Features
+
+- One-click Windows setup scripts with automatic Docker image download and dynamic port assignment.
+- Pre-configured `acestream.conf` with production-ready limits for concurrent peers and robust caching.
+- Hardened startup script (`entrypoint.sh`) that validates environment variables and outputs detailed diagnostics.
+- Automatic patch of `player.html` so the web UI always points to the correct IP and port.
+- Multi-instance support: launch several containers simultaneously without port clashes.
+- Offline builds thanks to the bundled `resources/acestream.tar.gz` archive (no external downloads required).
+
+## Troubleshooting & Tips
+
+- Ensure the ports selected by the Windows script are **open in your firewall**.
+- For Linux/macOS usage set `INTERNAL_IP`, `HTTP_PORT`, and `HTTPS_PORT` accordingly when running `docker run` or `docker-compose`.
+- View real-time logs with `docker logs -f <container_name>` to diagnose engine issues.
+- The engine writes additional debug information when the `--log-debug` flag is enabled in `acestream.conf`.
+
+## Legal Notice
+
+This repository only distributes automation scripts. The Acestream binary blob is provided for **personal, educational or research purposes**.
+You are solely responsible for ensuring that your usage complies with all applicable laws and regulations.
+
 ## Contributions
 
 We welcome contributions. Fork, make changes, and submit a pull request for review.
