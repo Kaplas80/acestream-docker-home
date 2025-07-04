@@ -1,58 +1,46 @@
-# Set the base image.
+# Use the official Ubuntu 22.04 LTS (Jammy Jellyfish) base image
 FROM ubuntu:22.04
 
-# Define arguments for the Acestream version and its SHA256 hash.
-ARG ACESTREAM_VERSION=https://download.acestream.media/linux/acestream_3.2.3_ubuntu_22.04_x86_64_py3.10.tar.gz
-ARG ACESTREAM_SHA256=ad11060410c64f04c8412d7dc99272322f7a24e45417d4ef2644b26c64ae97c9
+# Define environment variables for encoding and app configuration
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV ACESTREAM_VERSION="acestream_3.2.3_ubuntu_22.04_x86_64_py3.10.tar.gz"
+ENV INTERNAL_IP="127.0.0.1"
+ENV HTTP_PORT="6878"
+ENV HTTPS_PORT="6879"
 
-ENV INTERNAL_IP=127.0.0.1
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
+# Install all system and Python dependencies in a single layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Basic tools
+    wget procps dos2unix \
+    # Python environment
+    python3 libpython3.10 python3-pip python3-setuptools python3-wheel \
+    python3-greenlet python3-gevent python3-psutil python3-simplejson \
+    # Build tools for Python modules
+    build-essential python3-dev libsqlite3-dev libxml2-dev libxslt1-dev \
+ && pip install --no-cache-dir \
+    # Python modules required by Acestream
+    apsw lxml PyNaCl requests pycryptodome isodate \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements.txt file into the build context.
-COPY config/requirements.txt /requirements.txt
+# Copy the entrypoint script, fix line endings, and grant execute permissions
+COPY config/entrypoint.sh /entrypoint.sh
+RUN dos2unix /entrypoint.sh && chmod +x /entrypoint.sh
 
-# Install system packages and clean up in a single layer to keep the size to a minimum.
-RUN set -ex && \
-    apt-get update && \
-    apt-get install -yq --no-install-recommends \
-        ca-certificates \
-        python3.10 \
-        python3.10-distutils \
-        net-tools \
-        libpython3.10 \
-        wget \
-        libsqlite3-dev \
-        build-essential \
-        libxml2-dev \
-        libxslt1-dev && \
-    wget https://bootstrap.pypa.io/get-pip.py && \
-    python3.10 get-pip.py && \
-    pip install --no-cache-dir -r /requirements.txt && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/* /tmp/* /var/tmp/* && \
-    rm /requirements.txt get-pip.py
+# Copy and extract Acestream from the local archive
+COPY resources/acestream.tar.gz /tmp/acestream.tar.gz
+RUN mkdir -p /opt/acestream && \
+    tar --extract --gzip --directory /opt/acestream --file /tmp/acestream.tar.gz && \
+    rm /tmp/acestream.tar.gz
 
-# Install Acestream from URL.
-#RUN mkdir -p /opt/acestream && \
-#    wget --no-verbose --output-document acestream.tgz "${ACESTREAM_VERSION}" && \
-#    echo "${ACESTREAM_SHA256} acestream.tgz" | sha256sum --check && \
-#    tar --extract --gzip --directory /opt/acestream --file acestream.tgz && \
-#    rm acestream.tgz \
-
-# Install Acestream from file. Actual (ACESTREAM_VERSION = acestream_3.2.3_ubuntu_22.04_x86_64_py3.10.tar.gz)
-COPY resources/acestream.tar.gz /opt/acestream/
-RUN tar --extract --gzip --directory /opt/acestream --file /opt/acestream/acestream.tar.gz && \
-    rm /opt/acestream/acestream.tar.gz
-
-# Overwrite the Ace Stream web player.
+# Overwrite the default web player with the custom version
 COPY web/player.html /opt/acestream/data/webui/html/player.html
 
-# Copy Acestream configuration.
+# Copy the Acestream configuration file
 COPY config/acestream.conf /opt/acestream/acestream.conf
 
-# Entry point for the container.
-COPY config/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Expose the default Acestream port
+EXPOSE 6878
 
+# Entrypoint for the container
 ENTRYPOINT ["/entrypoint.sh"]
