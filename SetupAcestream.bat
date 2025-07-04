@@ -12,7 +12,13 @@ set "DOCKER_COMPOSE_FILE=docker-compose.yml"
 set "PREFIX=acestream://"
 set "HTTP_PORT_BASE=6878"
 set "HTTPS_PORT_BASE=6879"
-
+:: -------------------------
+:: Parse command line arguments for optional flags
+:: -------------------------
+set "AUTO_CLEAN=false"
+for %%A in (%*) do (
+    if /I "%%A"=="--auto-clean" set "AUTO_CLEAN=true"
+)
 :: -------------------------
 :: Checking for Docker installation and operational status.
 :: -------------------------
@@ -66,6 +72,17 @@ set "HTTP_PORT=%HTTP_PORT_BASE%"
 set "HTTPS_PORT=%HTTPS_PORT_BASE%"
 
 :checkPort
+rem First, ensure the desired port is not already taken by another process (e.g., native Acestream Player)
+netstat -ano | findstr /R /C:":!PORT!\>" >nul 2>&1
+if !errorlevel! == 0 (
+    echo Port !PORT! is already occupied by another application. Trying the next port...
+    set /a "PORT+=2"
+    set /a "HTTP_PORT+=2"
+    set /a "HTTPS_PORT+=2"
+    set "SERVICE_NAME=%SERVICE_NAME_BASE%!PORT!"
+    goto checkPort
+)
+
 set CONTAINER_ID=
 for /f "tokens=*" %%i in ('docker ps -q --filter "name=!SERVICE_NAME!"') do set CONTAINER_ID=%%i
 
@@ -111,6 +128,30 @@ echo docker-compose.yml file created or updated successfully.
 :: Pull the latest image before starting the service
 echo Pulling the latest Docker image...
 docker-compose -f !DOCKER_COMPOSE_FILE! pull !SERVICE_NAME!
+
+:: === SAFE CLEANUP OF OUTDATED ACESTREAM IMAGES ===
+echo Checking for outdated Acestream images...
+set "NEW_IMAGE_ID="
+for /f "tokens=1" %%I in ('docker images %IMAGE_NAME% -q') do (
+    if not defined NEW_IMAGE_ID (
+        set "NEW_IMAGE_ID=%%I"
+    ) else (
+        set "OLD_IMAGE_ID=%%I"
+        if "!AUTO_CLEAN!"=="true" (
+            echo Auto-clean: removing obsolete image !OLD_IMAGE_ID! ...
+            docker rmi -f !OLD_IMAGE_ID! >nul 2>&1
+        ) else (
+            choice /M "Remove outdated image !OLD_IMAGE_ID!? (Y/N)" /C YN
+            if !errorlevel! == 1 (
+                echo Removing image !OLD_IMAGE_ID! ...
+                docker rmi -f !OLD_IMAGE_ID!
+            ) else (
+                echo Skipped image !OLD_IMAGE_ID!.
+            )
+        )
+    )
+)
+:: -------------------------
 
 :: Attempt to start the service and handle errors in case of failure.
 echo Starting the Acestream service...

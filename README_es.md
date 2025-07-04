@@ -128,11 +128,15 @@ inicio del contenedor. Esto asegura que la interfaz web apunte a la instancia co
 - Parche automático de `player.html` para que la interfaz web siempre apunte a la IP y puerto correctos.
 - Soporte multi-instancia: puedes lanzar varios contenedores simultáneamente sin conflictos de puertos.
 - Construcciones offline gracias al archivo `resources/acestream.tar.gz` incluido (no se requieren descargas externas).
+- **Detección automática de conflictos de puertos**: si el puerto por defecto `6878` está ocupado (por ejemplo, por Acestream Player de escritorio), el script de Windows asigna el siguiente puerto par libre.
+- Flag opcional `--auto-clean`: tras descargar una nueva imagen, el script puede eliminar de forma segura las imágenes antiguas de Acestream para mantener limpio tu host Docker.
 
 ## Solución de Problemas y Consejos
 
 - Asegúrate de que los puertos seleccionados por el script de Windows estén **abiertos en tu firewall**.
+- Si aparece el mensaje "puerto ya en uso", el script cambiará automáticamente al siguiente puerto libre — verifica el puerto final mostrado en consola.
 - Para uso en Linux/macOS establece `INTERNAL_IP`, `HTTP_PORT` y `HTTPS_PORT` al ejecutar `docker run` o `docker-compose`.
+- Utiliza `--auto-clean` con el script para eliminar automáticamente imágenes obsoletas de Acestream tras una actualización (o responde *S* cuando se solicite).
 - Visualiza los registros en tiempo real con `docker logs -f <nombre_contenedor>` para diagnosticar problemas del motor.
 - El motor escribe información de depuración adicional cuando la opción `--log-debug` está habilitada en `acestream.conf`.
 

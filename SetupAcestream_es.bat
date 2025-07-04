@@ -14,6 +14,13 @@ set "HTTP_PORT_BASE=6878"
 set "HTTPS_PORT_BASE=6879"
 
 :: -------------------------
+:: Analizar argumentos de linea de comandos para flags opcionales
+:: -------------------------
+set "AUTO_CLEAN=false"
+for %%A in (%*) do (
+    if /I "%%A"=="--auto-clean" set "AUTO_CLEAN=true"
+)
+:: -------------------------
 :: Verificacion de la instalacion y estado de funcionamiento de Docker.
 :: -------------------------
 :dockerCheck
@@ -66,6 +73,17 @@ set "HTTP_PORT=%HTTP_PORT_BASE%"
 set "HTTPS_PORT=%HTTPS_PORT_BASE%"
 
 :checkPort
+rem Primero, verificar si el puerto deseado ya esta ocupado por otro proceso (p.ej. Acestream Player nativo)
+netstat -ano | findstr /R /C:":!PORT!\>" >nul 2>&1
+if !errorlevel! == 0 (
+    echo El puerto !PORT! esta ocupado por otra aplicacion. Probando con el siguiente puerto...
+    set /a "PORT+=2"
+    set /a "HTTP_PORT+=2"
+    set /a "HTTPS_PORT+=2"
+    set "SERVICE_NAME=%SERVICE_NAME_BASE%!PORT!"
+    goto checkPort
+)
+
 set CONTAINER_ID=
 for /f "tokens=*" %%i in ('docker ps -q --filter "name=!SERVICE_NAME!"') do set CONTAINER_ID=%%i
 
@@ -111,6 +129,30 @@ echo Archivo docker-compose.yml creado o actualizado exitosamente.
 :: Descarga la imagen Docker mas actualizada antes de arrancar el servicio
 echo Descargando la imagen Docker mas actualizada...
 docker-compose -f !DOCKER_COMPOSE_FILE! pull !SERVICE_NAME!
+
+:: === LIMPIEZA SEGURA DE IMAGENES OBSOLETAS DE ACESTREAM ===
+echo Comprobando imagenes obsoletas de Acestream...
+set "NEW_IMAGE_ID="
+for /f "tokens=1" %%I in ('docker images %IMAGE_NAME% -q') do (
+    if not defined NEW_IMAGE_ID (
+        set "NEW_IMAGE_ID=%%I"
+    ) else (
+        set "OLD_IMAGE_ID=%%I"
+        if "!AUTO_CLEAN!"=="true" (
+            echo Auto-clean activado: eliminando imagen obsoleta !OLD_IMAGE_ID! ...
+            docker rmi -f !OLD_IMAGE_ID! >nul 2>&1
+        ) else (
+            choice /M "Eliminar imagen obsoleta !OLD_IMAGE_ID!? (S/N)" /C SN
+            if !errorlevel! == 1 (
+                echo Eliminando imagen !OLD_IMAGE_ID! ...
+                docker rmi -f !OLD_IMAGE_ID!
+            ) else (
+                echo Imagen !OLD_IMAGE_ID! omitida.
+            )
+        )
+    )
+)
+:: -------------------------
 
 :: Intento de iniciar el servicio y manejo de errores en caso de fallo.
 echo Iniciando el servicio de Acestream...

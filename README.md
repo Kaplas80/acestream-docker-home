@@ -125,11 +125,15 @@ This ensures that the web interface points to the correct Acestream engine insta
 - Automatic patch of `player.html` so the web UI always points to the correct IP and port.
 - Multi-instance support: launch several containers simultaneously without port clashes.
 - Offline builds thanks to the bundled `resources/acestream.tar.gz` archive (no external downloads required).
+- Built-in **port conflict detection**: if the default port `6878` is already occupied (e.g. by the desktop Acestream Player), the Windows setup script automatically picks the next free even port.
+- Optional `--auto-clean` flag: after pulling a newer image the script can safely delete outdated Acestream container images to keep your Docker host tidy.
 
 ## Troubleshooting & Tips
 
 - Ensure the ports selected by the Windows script are **open in your firewall**.
+- If you see "port already in use" errors, the script should automatically switch to the next free port — verify the final port printed in the console.
 - For Linux/macOS usage set `INTERNAL_IP`, `HTTP_PORT`, and `HTTPS_PORT` accordingly when running `docker run` or `docker-compose`.
+- Use `--auto-clean` with the setup script to automatically remove obsolete Acestream images after an update (or answer *Y* when prompted).
 - View real-time logs with `docker logs -f <container_name>` to diagnose engine issues.
 - The engine writes additional debug information when the `--log-debug` flag is enabled in `acestream.conf`.
 
