@@ -2,8 +2,8 @@
 FROM ubuntu:22.04
 
 # Define environment variables for encoding and app configuration
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 ENV ACESTREAM_VERSION="acestream_3.2.3_ubuntu_22.04_x86_64_py3.10.tar.gz"
 ENV INTERNAL_IP="127.0.0.1"
 ENV HTTP_PORT="6878"
