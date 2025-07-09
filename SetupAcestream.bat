@@ -183,7 +183,7 @@ echo [Farewell]
 echo -------------------------------------------------------------
 echo Thank you for using the Acestream x Docker setup assistant.
 echo We hope you enjoy an excellent streaming experience!
-echo @sergioamarquezdev
+echo @sergiomarquezdev
 echo -------------------------------------------------------------
 echo Finalizing the script and restoring the environment...
 pause
